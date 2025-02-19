@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Never
 
 from mopidy.core import PlaybackState
-from mopidy.types import DurationMs, Percentage
+from mopidy.types import DurationMs, Percentage, TracklistId
 
 from mopidy_mpd import exceptions, protocol
 
@@ -188,7 +188,7 @@ def play(context: MpdContext, songpos: int | None = None) -> None:
 
     try:
         tl_track = context.core.tracklist.slice(songpos, songpos + 1).get()[0]
-        context.core.playback.play(tlid=tl_track.tlid).get()
+        context.core.playback.play(tlid=TracklistId(tl_track.tlid)).get()
     except IndexError as exc:
         raise exceptions.MpdArgError("Bad song index") from exc
 
@@ -207,7 +207,7 @@ def _play_minus_one(context: MpdContext) -> None:
 
             tl_tracks = context.core.tracklist.slice(0, 1).get()
             if tl_tracks:
-                context.core.playback.play(tlid=tl_tracks[0].tlid).get()
+                context.core.playback.play(tlid=TracklistId(tl_tracks[0].tlid)).get()
                 return
 
             # No current track, empty tracklist: nothing to do
@@ -238,7 +238,7 @@ def playid(context: MpdContext, tlid: int) -> None:
     tl_tracks = context.core.tracklist.filter({"tlid": [tlid]}).get()
     if not tl_tracks:
         raise exceptions.MpdNoExistError("No such song")
-    context.core.playback.play(tlid=tl_tracks[0].tlid).get()
+    context.core.playback.play(tlid=TracklistId(tl_tracks[0].tlid)).get()
 
 
 @protocol.commands.add("previous")

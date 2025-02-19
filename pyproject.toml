@@ -59,6 +59,7 @@ target-version = "py311"
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
+	"A005",   # TODO types and tokenize should be renamed
     "ANN401", # any-type
     "D",      # pydocstyle
     "EM101",  # raw-string-in-exception  # TODO

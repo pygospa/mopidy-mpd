@@ -74,10 +74,8 @@ class TestMpdContext:
     @pytest.mark.parametrize(
         "bad_ref",
         [
-            Ref.track(uri="dummy:/x"),
-            Ref.track(name="x"),
-            Ref.directory(uri="dummy:/y"),
-            Ref.directory(name="y"),
+            Ref.track(uri="dummy:/x", name="x"),
+            Ref.directory(uri="dummy:/y", name="y"),
         ],
     )
     def test_browse_skips_bad_refs(

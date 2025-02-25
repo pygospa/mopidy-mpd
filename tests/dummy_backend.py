@@ -45,7 +45,7 @@ class DummyLibraryProvider(backend.LibraryProvider):
         return self.dummy_get_distinct_result.get(field, set())
 
     def lookup(self, uri):
-        uri = Ref.track(uri=uri).uri
+        uri = Ref.track(uri=uri,name="dummy").uri
         return [t for t in self.dummy_library if uri == t.uri]
 
     def refresh(self, uri=None):
@@ -116,7 +116,7 @@ class DummyPlaylistsProvider(backend.PlaylistsProvider):
         return [Ref.track(uri=t.uri, name=t.name) for t in playlist.tracks]
 
     def lookup(self, uri):
-        uri = Ref.playlist(uri=uri).uri
+        uri = Ref.playlist(uri=uri, name="dummy").uri
         for playlist in self._playlists:
             if playlist.uri == uri:
                 return playlist

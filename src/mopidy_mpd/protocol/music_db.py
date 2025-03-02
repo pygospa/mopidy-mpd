@@ -86,7 +86,7 @@ def _get_tracks(search_results: Iterable[SearchResult]) -> list[Track]:
 def _album_as_track(album: Album) -> Track:
     return Track(
         uri=album.uri,
-        name="Album: " + album.name,
+        name="Album: " + album.name if album.name else None,
         artists=album.artists,
         album=album,
         date=album.date,
@@ -96,8 +96,8 @@ def _album_as_track(album: Album) -> Track:
 def _artist_as_track(artist: Artist) -> Track:
     return Track(
         uri=artist.uri,
-        name="Artist: " + artist.name,
-        artists=[artist],
+        name="Artist: " + artist.name if artist.name else None,
+        artists=frozenset([artist]),
     )
 
 
@@ -192,7 +192,7 @@ def findadd(context: MpdContext, *args: str) -> None:
 
     results = context.core.library.search(query=query, exact=True).get()
     uris = [track.uri for track in _get_tracks(results)]
-    context.core.tracklist.add(uris=uris).get()
+    context.core.tracklist.add(uris=[uri for uri in uris if uri is not None]).get()
 
 
 @protocol.commands.add("list")
@@ -498,7 +498,8 @@ def searchadd(context: MpdContext, *args: str) -> None:
 
     results = context.core.library.search(query).get()
 
-    context.core.tracklist.add(uris=[track.uri for track in _get_tracks(results)]).get()
+    context.core.tracklist.add(uris=[track.uri for track in _get_tracks(results)
+                                     if track.uri is not None]).get()
 
 
 @protocol.commands.add("searchaddpl")

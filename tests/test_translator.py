@@ -1,5 +1,7 @@
 import unittest
+from uuid import UUID
 
+import pytest
 from mopidy.models import Album, Artist, Playlist, TlTrack, Track
 
 from mopidy_mpd import translator
@@ -112,29 +114,41 @@ class TrackMpdFormatTest(unittest.TestCase):
         keys = [k for k, v in result]
         assert "Last-Modified" not in keys
 
-    def test_track_to_mpd_format_musicbrainz_trackid(self):
-        track = self.track.replace(musicbrainz_id="foo")
+    @pytest.mark.skip("Should also accept UUID3; github.com/mopidy/mopidy/issues/2192")
+    def test_track_to_mpd_format_musicbrainz_trackid_v3(self):
+        mbid = "4bf46e65-a553-3a4a-884d-9c26be33bc56"
+        track = self.track.replace(musicbrainz_id=UUID(mbid))
         result = translator.track_to_mpd_format(track, tagtype_list.TAGTYPE_LIST)
-        assert ("MUSICBRAINZ_TRACKID", "foo") in result
+        assert ("MUSICBRAINZ_TRACKID", mbid) in result
+
+
+    def test_track_to_mpd_format_musicbrainz_trackid(self):
+        mbid = "71c3ce65-219e-4daa-ac33-cabcb558f52d"
+        track = self.track.replace(musicbrainz_id=UUID(mbid))
+        result = translator.track_to_mpd_format(track, tagtype_list.TAGTYPE_LIST)
+        assert ("MUSICBRAINZ_TRACKID", mbid) in result
 
     def test_track_to_mpd_format_musicbrainz_albumid(self):
-        album = self.track.album.replace(musicbrainz_id="foo")
+        mbid = "dc919562-19c7-42c8-961c-7ed5520f00bb"
+        album = self.track.album.replace(musicbrainz_id=UUID(mbid))
         track = self.track.replace(album=album)
         result = translator.track_to_mpd_format(track, tagtype_list.TAGTYPE_LIST)
-        assert ("MUSICBRAINZ_ALBUMID", "foo") in result
+        assert ("MUSICBRAINZ_ALBUMID", mbid) in result
 
     def test_track_to_mpd_format_musicbrainz_albumartistid(self):
-        artist = next(iter(self.track.artists)).replace(musicbrainz_id="foo")
+        mbid = "db92a151-1ac2-438b-bc43-b82e149ddd50"
+        artist = next(iter(self.track.artists)).replace(musicbrainz_id=UUID(mbid))
         album = self.track.album.replace(artists=[artist])
         track = self.track.replace(album=album)
         result = translator.track_to_mpd_format(track, tagtype_list.TAGTYPE_LIST)
-        assert ("MUSICBRAINZ_ALBUMARTISTID", "foo") in result
+        assert ("MUSICBRAINZ_ALBUMARTISTID", mbid) in result
 
     def test_track_to_mpd_format_musicbrainz_artistid(self):
-        artist = next(iter(self.track.artists)).replace(musicbrainz_id="foo")
+        mbid = "db92a151-1ac2-438b-bc43-b82e149ddd50"
+        artist = next(iter(self.track.artists)).replace(musicbrainz_id=UUID(mbid))
         track = self.track.replace(artists=[artist])
         result = translator.track_to_mpd_format(track, tagtype_list.TAGTYPE_LIST)
-        assert ("MUSICBRAINZ_ARTISTID", "foo") in result
+        assert ("MUSICBRAINZ_ARTISTID", mbid) in result
 
     def test_concat_multi_values(self):
         artists = [Artist(name="ABBA"), Artist(name="Beatles")]

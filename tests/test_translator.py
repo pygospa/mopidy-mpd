@@ -121,7 +121,6 @@ class TrackMpdFormatTest(unittest.TestCase):
         result = translator.track_to_mpd_format(track, tagtype_list.TAGTYPE_LIST)
         assert ("MUSICBRAINZ_TRACKID", mbid) in result
 
-
     def test_track_to_mpd_format_musicbrainz_trackid(self):
         mbid = "71c3ce65-219e-4daa-ac33-cabcb558f52d"
         track = self.track.replace(musicbrainz_id=UUID(mbid))

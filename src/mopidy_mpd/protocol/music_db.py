@@ -498,8 +498,9 @@ def searchadd(context: MpdContext, *args: str) -> None:
 
     results = context.core.library.search(query).get()
 
-    context.core.tracklist.add(uris=[track.uri for track in _get_tracks(results)
-                                     if track.uri is not None]).get()
+    context.core.tracklist.add(
+        uris=[track.uri for track in _get_tracks(results) if track.uri is not None]
+    ).get()
 
 
 @protocol.commands.add("searchaddpl")

@@ -86,7 +86,8 @@ def listplaylistinfo(context: MpdContext, name: str) -> protocol.Result:
     playlist = _get_playlist(context, name, must_exist=True)
     track_uris = [track.uri for track in playlist.tracks]
     tracks_map = context.core.library.lookup(
-        uris=[uri for uri in track_uris if uri is not None]).get()
+        uris=[uri for uri in track_uris if uri is not None]
+    ).get()
     tracks = []
     for uri in track_uris:
         if uri is not None:

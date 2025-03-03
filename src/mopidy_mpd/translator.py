@@ -146,7 +146,8 @@ def concat_multi_values(
     # strict alphabetical). If we just use them in the order in which they come
     # in then the musicbrainz ids have a higher chance of staying in sync
     return ";".join(
-        str(getattr(m, attribute)) for m in models
+        str(getattr(m, attribute))
+        for m in models
         if getattr(m, attribute, None) is not None
     )
 
